@@ -1,31 +1,22 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+##  Coursera Reproducible Research Assignment 1 - Code Chunks
+##
 ##  This assignment makes use of data from a personal activity monitoring device.
 ##  The monitoring device collects data at 5 minute intervals.
 ##  The data consists of two months of data from an anonymous individual collected during the                                            
 ##  months of October and November, 2012 and include the number of steps taken
 ##  in 5 minute intervals each day.
 
-## Loading and preprocessing the data
-```{r}
 library(dplyr)
 library(ggplot2)
 library(lattice)
+
+##  Loading and preprocessing the data
 mon_data <- read.csv("activity.csv", header=TRUE, sep=",")
 
-```
-
-## What is mean total number of steps taken per day?
-```{r}
+##  Calculate the total number of steps taken per day
 total_steps <- sum(mon_data$steps, na.rm=TRUE)
 total_steps 
-```
-## Histogram of steps taken each day
-```{r}
+
 ##  Group and summarize the data by day
 day_data <- group_by(mon_data, date)
 ##day_sum <- summarize(day_data, steps=sum(steps,na.rm=TRUE))
@@ -36,20 +27,12 @@ day_sum <- summarize(day_data, steps=sum(steps))
 hist(day_sum$steps, main="Histogram of steps taken each Day", 
      xlab="steps", ylab="Frequency", col ="red")
 
-```
-## Mean and Median Steps each Day
-```{r}
 ##  Report mean and median of all observations
 mean_all <- mean(day_sum$steps, na.rm=TRUE)
 median_all <- median(day_sum$steps, na.rm=TRUE)
 mean_all
 median_all
 ##                                                     
-```
-
-
-## What is the average daily activity pattern?
-```{r}
 ##  Calculate the Average Daily Activity Pattern
 intvl_data <- group_by(mon_data, interval)
 ##intvl_sum <- summarize(intvl_data, steps=mean(steps))
@@ -61,9 +44,6 @@ with(intvl_sum, plot(interval, steps, type="l",
                    ylab="Steps", xlab="Interval"))
 title(main="Average Daily Activity Pattern")
 
-```
-## Which 5 minute interval has the maximum # of steps?
-```{r}
 ##                                                     
 ##  Which 5 Minute Interval across the days contains the maximum number of steps
 max_steps <- max(intvl_sum$steps)
@@ -77,18 +57,10 @@ for (i in 1:288)
   }
 intvl_of_max_steps
 
-```
-
-## Total Missing values in Dataset
-```{r}
 ##  Calculate the number of observations with missing values
 num_of_missing <- sum(is.na(day_data))
 num_of_missing
-```
 
-
-## Histogram with missing values substiuted with averages for the interval
-```{r}
 ##  Fill in Missing Values with the mean of the 5 minute interval averaged over the days.
 ## Subset Rows that have missing data
 miss_data <-  subset(mon_data,(is.na(day_data)))
@@ -118,20 +90,12 @@ day2_sum <- summarize(new_data, steps=sum(steps))
 hist(day2_sum$steps, main="Histogram of steps taken each Day", 
      xlab="steps", ylab="Frequency", col ="red")
 
-```
-
-## New Mean and Median with substitiuted missing values
-```{r}
 ##  Report mean and median of all observations
 mean2_all <- mean(day2_sum$steps)
 median2_all <- median(day2_sum$steps)
 mean2_all
 median2_all
-```
-
-
-## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+##                                                
 ##  Convert Date in new Combined File to Date Type
 new_data$date <- as.Date(strptime(new_data$date, format="%Y-%m-%d")) 
 ##Create new variable day to classify
@@ -157,7 +121,3 @@ intvl2_sum <- summarize(intvl2_data, steps=mean(steps))
 xyplot(intvl2_sum$steps ~ intvl2_sum$interval | intvl2_sum$day, 
        layout = c(1, 2), type = "l", 
        xlab = "Interval", ylab = "Number of steps")
-
-```
-
-
